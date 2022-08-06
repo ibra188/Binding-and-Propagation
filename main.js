@@ -11,13 +11,12 @@
     this.deck_div = document.createElement("div");
     this.deck_div.id = "deck_div";
     this.gameDeck = new Deck(this.deck_div, option);
-    this.gameDeck.builDeck();
+    this.gameDeck.call(this);
 
      var shuffleBtn = document.createElement("button");
      shuffleBtn.innerHTML = "Shuffle";
-     shuffleBtn.onclick = function(){
-      console.log(this);
-     }
+     shuffleBtn.onclick = this.gameDeck.shuffle.bind(this);
+
      this.info_div.appendChild(shuffleBtn);
     
     //Rules
@@ -63,22 +62,22 @@
  
 
  //Deck
- var Deck = function(deck_div, option){
+ var Deck = function(option){
   this.deckData = option.data;
   this.builDeck = function(){
     var parentFrag = document.createDocumentFragment();
-    deck_div.innerHTML = "";
-    for( var i = this.deckData.length -1; i >= 0; --i){
+    this.deck_div.innerHTML = "";
+    for( var i = this.option.data.length -1; i >= 0; --i){
       var card = new Card();
       card.id = "card-" + i;
-      card.data = this.deckData[i];
+      card.data = this.option.data[i];
       card.buildCard(parentFrag);
     }
-    deck_div.appendChild(parentFrag);
-    this.stack(deck_div);
+    this.deck_div.appendChild(parentFrag);
+    this.gameDeck.stack.call(this);
     
   }
-  //this.shuffle();
+  
  }
    //Cards
    //-----
@@ -119,7 +118,7 @@
      this.cardBack = document.createElement("div")
      this.cardBack.className = "card_back"
 
-     this.buildCard = function(){
+     this.buildCard = function(parentFrag){
       var flipDiv  = document.createElement("div"),
           frontValDiv = document.createElement("div"),
           backValDiv = document.createElement("div"),
